@@ -15,19 +15,21 @@ export default function NoteOutput({ note }: { note: string }) {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.card}>
-        {note
-          ? <p className={styles.text}>{note}</p>
-          : <p className={styles.placeholder}>Fill in the fields above to generate the note.</p>
-        }
+      <div className={styles.row}>
+        <div className={styles.card}>
+          {note
+            ? <p className={styles.text}>{note}</p>
+            : <p className={styles.placeholder}>Fill in the fields above to generate the note.</p>
+          }
+        </div>
+        <button
+          className={`${styles.copyBtn} ${copied ? styles.copied : ''}`}
+          onClick={handleCopy}
+          disabled={!note}
+        >
+          {copied ? '✓' : 'Copy'}
+        </button>
       </div>
-      <button
-        className={`${styles.copyBtn} ${copied ? styles.copied : ''}`}
-        onClick={handleCopy}
-        disabled={!note}
-      >
-        {copied ? '✓ Copied!' : 'Copy note'}
-      </button>
     </div>
   )
 }

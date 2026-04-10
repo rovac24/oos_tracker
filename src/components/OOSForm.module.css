@@ -114,9 +114,9 @@
   flex: 1;
   padding: 10px 16px;
   background: var(--surface);
-  border: 0.5px solid var(--border-md);
+  border: 0.5px solid var(--success-border);
   border-radius: var(--radius-md);
-  color: var(--text);
+  color: var(--success-text);
   font-size: 14px;
   cursor: pointer;
   font-weight: 500;
@@ -124,7 +124,7 @@
   transition: background 0.15s;
 }
 
-.sendBtn:hover { background: var(--surface-2); }
+.sendBtn:hover { background: var(--success-bg); }
 .sendBtn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .clearBtn {

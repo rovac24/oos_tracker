@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { OrderItem } from '@/lib/types'
 import styles from './ItemRow.module.css'
 
-const NO_SUB_MESSAGE = 'No subs available, all possible items already on order'
+const NO_SUB_MESSAGE = 'No suitable subs'
 
 interface ItemErrors {
   oosSku?: string

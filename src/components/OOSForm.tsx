@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { OrderItem, OrderData } from '@/lib/types'
-import { buildFullNote } from '@/lib/noteBuilder'
+import { buildFullNote, parsePrice } from '@/lib/noteBuilder'
 import { SCRIPT_URL } from '@/lib/config'
 import ItemRow from './ItemRow'
 import NoteOutput from './NoteOutput'
@@ -144,13 +144,13 @@ export default function OOSForm() {
       note,
       items: order.items.map(item => {
         const unitsUnavailable = parseFloat(item.unitsUnavailable) || 0
-        const unitPrice = parseFloat(item.unitPrice) || 0
+        const unitPrice = parsePrice(item.unitPrice)
         const total = (unitsUnavailable * unitPrice).toFixed(2)
         return {
           oosSku:           item.oosSku,
           unitsOrdered:     item.unitsOrdered,
           unitsUnavailable: item.unitsUnavailable,
-          unitPrice:        `$${parseFloat(item.unitPrice || '0').toFixed(2)}`,
+          unitPrice:        `$${unitPrice.toFixed(2)}`,
           total:            `$${total}`,
           subOffered:       item.subOffered === 'yes' ? 'Yes' : 'No',
           subAccepted:      item.subOffered === 'yes' ? 'Pending' : 'No',
@@ -243,7 +243,8 @@ export default function OOSForm() {
         <hr className={styles.divider} />
 
         <p className={styles.sectionLabel}>Generated note</p>
-        <NoteOutput note={note} />
+        
+      <NoteOutput note={note} />
 
         {status && (
           <div className={`${styles.statusMsg} ${styles[status.type]}`}>

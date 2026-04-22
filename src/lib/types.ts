@@ -8,6 +8,7 @@ export interface OrderItem {
   subbedSku: string
   subThc: string
   subOffered: 'yes' | 'no' | null
+  notes?: string; 
 }
 
 export interface OrderData {

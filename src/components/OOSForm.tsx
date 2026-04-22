@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { OrderItem, OrderData } from '@/lib/types'
-import { buildFullNote, parsePrice } from '@/lib/noteBuilder'
-import { SCRIPT_URL } from '@/lib/config'
+import { buildFullNote, parsePrice, toTitleCase } from '@/lib/noteBuilder'
 import ItemRow from './ItemRow'
 import NoteOutput from './NoteOutput'
 import styles from './OOSForm.module.css'
@@ -16,9 +15,12 @@ function createItem(): OrderItem {
   }
 }
 
-function formatDate(d: Date): string {
+function formatDate(d: Date, pacificStone: boolean): string {
   const mm = String(d.getMonth() + 1).padStart(2, '0')
   const dd = String(d.getDate()).padStart(2, '0')
+  if (pacificStone) {
+    return `${d.getMonth() + 1}/${dd}/${d.getFullYear()}`
+  }
   const yy = String(d.getFullYear()).slice(-2)
   return `${mm}.${dd}.${yy}`
 }
@@ -37,7 +39,9 @@ interface ItemErrors {
   subbedSku?: string
 }
 
-export default function OOSForm() {
+interface Props { scriptUrl: string; clientName: string; pacificStone: boolean }
+
+export default function OOSForm({ scriptUrl, clientName, pacificStone }: Props) {
   const [order, setOrder] = useState<OrderData>({
     placedOrder: '',
     retailerName: '',
@@ -59,7 +63,6 @@ export default function OOSForm() {
       ...prev,
       items: prev.items.map(item => item.id === id ? { ...item, ...patch } : item),
     }))
-    // Clear item errors as user types
     setErrors(prev => {
       const itemIndex = prev.items ? Object.keys(prev.items).find(
         k => order.items[parseInt(k)]?.id === id
@@ -113,15 +116,12 @@ export default function OOSForm() {
       if (!item.unitsOrdered.toString().trim()) { ie.unitsOrdered = 'Required'; missing.push(`Units Ordered${label}`) }
       if (!item.unitsUnavailable.toString().trim()) { ie.unitsUnavailable = 'Required'; missing.push(`Units Unavailable${label}`) }
       if (!item.unitPrice.toString().trim()) { ie.unitPrice = 'Required'; missing.push(`Unit Price${label}`) }
-      // Sub Offered must be selected
       if (item.subOffered === null) { ie.subbedSku = 'Please select Yes or No'; missing.push(`Sub Offered${label}`) }
-      // If Yes, Subbed SKU required
       if (item.subOffered === 'yes' && !item.subbedSku.trim()) { ie.subbedSku = 'Required'; missing.push(`Subbed SKU${label}`) }
       if (Object.keys(ie).length > 0) itemErrors[idx] = ie
     })
 
     if (Object.keys(itemErrors).length > 0) newErrors.items = itemErrors
-
     setErrors(newErrors)
 
     if (missing.length > 0) {
@@ -136,31 +136,39 @@ export default function OOSForm() {
     if (!validate()) return
     setSending(true)
 
-    const orderDate = formatDate(new Date())
+    const orderDate = formatDate(new Date(), pacificStone)
     const payload = {
       orderDate,
-      placedOrder: order.placedOrder,
-      retailerName: order.retailerName,
+      placedOrder: toTitleCase(order.placedOrder),
+      retailerName: toTitleCase(order.retailerName),
       note,
       items: order.items.map(item => {
         const unitsUnavailable = parseFloat(item.unitsUnavailable) || 0
         const unitPrice = parsePrice(item.unitPrice)
         const total = (unitsUnavailable * unitPrice).toFixed(2)
+        const isNo = item.subOffered === 'no'
+        const isYes = item.subOffered === 'yes'
+
         return {
-          oosSku:           item.oosSku,
-          unitsOrdered:     item.unitsOrdered,
+          oosSku: toTitleCase(item.oosSku),
+          unitsOrdered: item.unitsOrdered,
           unitsUnavailable: item.unitsUnavailable,
-          unitPrice:        `$${unitPrice.toFixed(2)}`,
-          total:            `$${total}`,
-          subOffered:       item.subOffered === 'yes' ? 'Yes' : 'No',
-          subAccepted:      item.subOffered === 'yes' ? 'Pending' : 'No',
-          subbedSku:        item.subbedSku,
+          unitPrice: `$${unitPrice.toFixed(2)}`,
+          total: `$${total}`,
+          subOffered: isYes ? 'Yes' : 'No',
+          subAccepted: isYes ? 'Pending' : 'No',
+          // Ascend: subbedSku always gets the value (including "No suitable subs" message)
+          // Pacific Stone: subbedSku only gets value on Yes; No goes to notes field
+          subbedSku: isYes
+            ? toTitleCase(item.subbedSku)
+            : pacificStone ? '' : toTitleCase(item.subbedSku),
+          notes: pacificStone && isNo ? toTitleCase(item.subbedSku) : '',
         }
       }),
     }
 
     try {
-      await fetch(SCRIPT_URL, {
+      await fetch(scriptUrl, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
@@ -243,8 +251,7 @@ export default function OOSForm() {
         <hr className={styles.divider} />
 
         <p className={styles.sectionLabel}>Generated note</p>
-        
-      <NoteOutput note={note} />
+        <NoteOutput note={note} />
 
         {status && (
           <div className={`${styles.statusMsg} ${styles[status.type]}`}>
@@ -258,10 +265,10 @@ export default function OOSForm() {
           </button>
           <button className={styles.clearBtn} onClick={resetForm} title="Clear everything">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="3 6 5 6 21 6"/>
-              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-              <path d="M10 11v6M14 11v6"/>
-              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+              <path d="M10 11v6M14 11v6" />
+              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
             </svg>
             Clear
           </button>

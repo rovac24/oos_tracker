@@ -1,26 +1,30 @@
 import { OrderItem } from './types'
 
+export function toTitleCase(str: string): string {
+  if (!str) return ''
+  return str
+    .toLowerCase()
+    .replace(/(?:^|\s|[-/])[a-z]/g, c => c.toUpperCase())
+}
+
 export function pct(val: string): string {
   const s = (val || '').trim()
   if (!s) return ''
   return s.endsWith('%') ? s : s + '%'
 }
 
-// Strip leading $ and parse as float
 export function parsePrice(val: string): number {
   return parseFloat((val || '').replace(/^\$/, '').trim()) || 0
 }
 
 export function buildItemNote(item: OrderItem): string {
-  const oosSku    = item.oosSku    || '[OOS SKU]'
+  const oosSku    = toTitleCase(item.oosSku)    || '[OOS SKU]'
   const thcStr    = pct(item.thc)
   const uO        = item.unitsOrdered     !== '' ? parseFloat(item.unitsOrdered)     : null
   const uU        = item.unitsUnavailable !== '' ? parseFloat(item.unitsUnavailable) : null
-  const subbed    = item.subbedSku || '[Subbed SKU]'
+  const subbed    = toTitleCase(item.subbedSku) || '[Subbed SKU]'
   const subThcStr = pct(item.subThc)
-
-  // Only append "at X%" if THC was entered
-  const atThc = thcStr ? ` at ${thcStr}` : ''
+  const atThc     = thcStr ? ` at ${thcStr}` : ''
 
   let line1 = ''
   if (uO !== null && uU !== null) {

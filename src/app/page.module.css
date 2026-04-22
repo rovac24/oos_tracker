@@ -6,7 +6,11 @@
 }
 
 .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 2rem;
+  gap: 1rem;
 }
 
 .title {
@@ -14,10 +18,126 @@
   font-weight: 600;
   color: var(--text);
   letter-spacing: -0.02em;
+  white-space: nowrap;
 }
 
-.subtitle {
+.clientButtons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.clientBtn {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  padding: 4px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.clientBtn:hover {
+  border-color: var(--border-md);
+}
+
+.clientBtnActive {
+  border-color: var(--success-border);
+  box-shadow: 0 0 0 3px var(--success-bg);
+}
+
+.clientIcon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.hint {
+  font-size: 14px;
+  color: var(--text-3);
+  text-align: center;
+  margin-top: 3rem;
+  font-style: italic;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+}
+
+.modal {
+  background: var(--surface);
+  border: 0.5px solid var(--border-md);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  max-width: 360px;
+  width: 100%;
+}
+
+.modalTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.modalBody {
   font-size: 14px;
   color: var(--text-2);
-  margin-top: 4px;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
 }
+
+.modalBody strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.modalActions {
+  display: flex;
+  gap: 8px;
+}
+
+.modalCancel {
+  flex: 1;
+  padding: 9px 12px;
+  background: var(--surface-2);
+  border: 0.5px solid var(--border-md);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.modalCancel:hover { background: var(--border); }
+
+.modalConfirm {
+  flex: 1;
+  padding: 9px 12px;
+  background: var(--surface);
+  border: 0.5px solid var(--success-border);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--success-text);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.modalConfirm:hover { background: var(--success-bg); }

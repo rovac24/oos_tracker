@@ -28,6 +28,7 @@ function formatDate(d: Date, pacificStone: boolean): string {
 interface FieldErrors {
   placedOrder?: string
   retailerName?: string
+  salesRep?: string
   items?: Record<number, ItemErrors>
 }
 
@@ -47,6 +48,7 @@ export default function OOSForm({ scriptUrl, clientName, pacificStone }: Props) 
     retailerName: '',
     items: [createItem()],
   })
+  const [salesRep, setSalesRep] = useState('')
   const [note, setNote] = useState('')
   const [status, setStatus] = useState<{ msg: string; type: 'success' | 'error' } | null>(null)
   const [sending, setSending] = useState(false)
@@ -86,6 +88,7 @@ export default function OOSForm({ scriptUrl, clientName, pacificStone }: Props) 
 
   const resetForm = () => {
     setOrder({ placedOrder: '', retailerName: '', items: [createItem()] })
+    setSalesRep('')
     setStatus(null)
     setErrors({})
   }
@@ -106,6 +109,10 @@ export default function OOSForm({ scriptUrl, clientName, pacificStone }: Props) 
     if (!order.retailerName.trim()) {
       newErrors.retailerName = 'Required'
       missing.push('Retailer Name')
+    }
+    if (pacificStone && !salesRep) {
+      newErrors.salesRep = 'Required'
+      missing.push('Sales Rep')
     }
 
     const itemErrors: Record<number, ItemErrors> = {}
@@ -141,6 +148,7 @@ export default function OOSForm({ scriptUrl, clientName, pacificStone }: Props) 
       orderDate,
       placedOrder: toTitleCase(order.placedOrder),
       retailerName: toTitleCase(order.retailerName),
+      salesRep,
       note,
       items: order.items.map(item => {
         const unitsUnavailable = parseFloat(item.unitsUnavailable) || 0
@@ -230,6 +238,29 @@ export default function OOSForm({ scriptUrl, clientName, pacificStone }: Props) 
               />
               {errors.retailerName && <span className={styles.errorMsg}>{errors.retailerName}</span>}
             </div>
+            {pacificStone && (
+              <div className={styles.field}>
+                <label>Sales Rep</label>
+                <select
+                  value={salesRep}
+                  onChange={e => {
+                    setSalesRep(e.target.value)
+                    if (errors.salesRep) setErrors(prev => ({ ...prev, salesRep: undefined }))
+                  }}
+                  className={errors.salesRep ? styles.inputError : ''}
+                >
+                  <option value="">— Select —</option>
+                  <option>Anthony</option>
+                  <option>Tim</option>
+                  <option>Nicole</option>
+                  <option>Panda</option>
+                  <option>Vinny</option>
+                  <option>Juan</option>
+                  <option>Max</option>
+                </select>
+                {errors.salesRep && <span className={styles.errorMsg}>{errors.salesRep}</span>}
+              </div>
+            )}
           </div>
         </div>
 

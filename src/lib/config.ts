@@ -10,7 +10,7 @@ export const CLIENTS = [
     id: 'pacific-stone',
     name: 'Pacific Stone',
     icon: '/pacific-stone-icon.png',
-    scriptUrl: 'https://script.google.com/macros/s/AKfycbyfGrCVOoexOFsztlcN9yazmbAuGfxrB6HWSiva0N5noeXHYr5yu_NRhjrOatiVBYsX/exec',
+    scriptUrl: 'https://script.google.com/macros/s/AKfycbzdDCTjXICw28XczvKYAPRJA8OyGqXYMrBShwWE_yBBumFE5elAPPCinOR9BrosITsb/exec',
     pacificStone: true,
   },
 ]

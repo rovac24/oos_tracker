@@ -99,7 +99,7 @@ export default function ItemRow({ item, index, canRemove, onChange, onRemove, er
           {errors.unitPrice && <span className={styles.errorMsg}>{errors.unitPrice}</span>}
         </div>
         <div className={styles.field}>
-          <label>THC %</label>
+          <label>THC % (Optional)</label>
           <input
             value={item.thc}
             onChange={e => set({ thc: e.target.value })}
@@ -143,7 +143,7 @@ export default function ItemRow({ item, index, canRemove, onChange, onRemove, er
         </div>
 
         <div className={`${styles.field} ${styles.subThcField}`}>
-          <label>Sub THC %</label>
+          <label>Sub THC % (Optional)</label>
           <input
             value={item.subThc}
             onChange={e => set({ subThc: e.target.value })}

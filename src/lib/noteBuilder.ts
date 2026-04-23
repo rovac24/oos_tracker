@@ -29,15 +29,15 @@ export function buildItemNote(item: OrderItem): string {
   let line1 = ''
   if (uO !== null && uU !== null) {
     if (uO === uU) {
-      line1 = `No available item: 0/${uO} ${oosSku}${atThc} - OOS`
+      line1 = `No available item: 0/${uO} ${oosSku}${atThc}`
     } else if (uO > uU) {
       const available = uO - uU
-      line1 = `Less available item: ${available}/${uO} ${oosSku}${atThc} - OOS\nAdded last ${available} units`
+      line1 = `Less available item: ${available}/${uO} ${oosSku}${atThc} - Added last ${available} units`
     } else {
-      line1 = `0/${uO} ${oosSku}${atThc} - OOS`
+      line1 = `0/${uO} ${oosSku}${atThc}`
     }
   } else {
-    line1 = `0/${uO ?? '[Units Ordered]'} ${oosSku}${atThc} - OOS`
+    line1 = `0/${uO ?? '[Units Ordered]'} ${oosSku}${atThc}`
   }
 
   let note = line1

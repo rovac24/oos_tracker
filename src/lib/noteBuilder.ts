@@ -47,7 +47,7 @@ export function buildItemNote(item: OrderItem): string {
       ? `Suggested sub: ${subbed} at ${subThcStr}`
       : `Suggested sub: ${subbed}`)
   } else if (item.subOffered === 'no') {
-    note += '\nNo suitable subs'
+    note += ' - No suitable subs'
   }
 
   return note

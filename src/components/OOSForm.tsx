@@ -18,10 +18,10 @@ function createItem(): OrderItem {
 function formatDate(d: Date, pacificStone: boolean): string {
   const mm = String(d.getMonth() + 1).padStart(2, '0')
   const dd = String(d.getDate()).padStart(2, '0')
-  if (pacificStone) {
-    return `${d.getMonth() + 1}/${dd}/${d.getFullYear()}`
-  }
   const yy = String(d.getFullYear()).slice(-2)
+  if (pacificStone) {
+    return `${d.getMonth() + 1}/${dd}/${yy}`
+  }
   return `${mm}.${dd}.${yy}`
 }
 

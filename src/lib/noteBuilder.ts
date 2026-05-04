@@ -54,5 +54,5 @@ export function buildItemNote(item: OrderItem): string {
 }
 
 export function buildFullNote(items: OrderItem[]): string {
-  return items.map(buildItemNote).join('\n\n')
+  return items.map(buildItemNote).join('\n')
 }

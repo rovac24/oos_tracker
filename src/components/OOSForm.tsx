@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { OrderItem, OrderData } from '@/lib/types'
 import { buildFullNote, parsePrice, toTitleCase } from '@/lib/noteBuilder'
 import ItemRow from './ItemRow'
@@ -43,6 +43,8 @@ interface ItemErrors {
 interface Props { scriptUrl: string; clientName: string; pacificStone: boolean }
 
 export default function OOSForm({ scriptUrl, clientName, pacificStone }: Props) {
+  const placedOrderRef = useRef<HTMLInputElement>(null)
+
   const [order, setOrder] = useState<OrderData>({
     placedOrder: '',
     retailerName: '',
@@ -55,6 +57,8 @@ export default function OOSForm({ scriptUrl, clientName, pacificStone }: Props) 
   const [errors, setErrors] = useState<FieldErrors>({})
   const [showModal, setShowModal] = useState(false)
   const [missingFields, setMissingFields] = useState<string[]>([])
+
+  useEffect(() => { placedOrderRef.current?.focus() }, [])
 
   useEffect(() => {
     setNote(buildFullNote(order.items))
@@ -78,8 +82,12 @@ export default function OOSForm({ scriptUrl, clientName, pacificStone }: Props) 
     })
   }, [order.items])
 
+  const [focusItemId, setFocusItemId] = useState<number | null>(null)
+
   const addItem = () => {
-    setOrder(prev => ({ ...prev, items: [...prev.items, createItem()] }))
+    const newItem = createItem()
+    setFocusItemId(newItem.id)
+    setOrder(prev => ({ ...prev, items: [...prev.items, newItem] }))
   }
 
   const removeItem = (id: number) => {
@@ -91,6 +99,7 @@ export default function OOSForm({ scriptUrl, clientName, pacificStone }: Props) 
     setSalesRep('')
     setStatus(null)
     setErrors({})
+    setTimeout(() => placedOrderRef.current?.focus(), 0)
   }
 
   const showStatus = (msg: string, type: 'success' | 'error') => {
@@ -215,6 +224,7 @@ export default function OOSForm({ scriptUrl, clientName, pacificStone }: Props) 
             <div className={styles.field}>
               <label>Placed Order #</label>
               <input
+                ref={placedOrderRef}
                 value={order.placedOrder}
                 onChange={e => {
                   setOrder(prev => ({ ...prev, placedOrder: e.target.value }))
@@ -274,6 +284,7 @@ export default function OOSForm({ scriptUrl, clientName, pacificStone }: Props) 
             onChange={updateItem}
             onRemove={removeItem}
             errors={errors.items?.[idx]}
+            autoFocus={item.id === focusItemId}
           />
         ))}
 

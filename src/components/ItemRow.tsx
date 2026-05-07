@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { OrderItem } from '@/lib/types'
 import styles from './ItemRow.module.css'
 
@@ -22,11 +22,17 @@ interface Props {
   onChange: (id: number, patch: Partial<OrderItem>) => void
   onRemove: (id: number) => void
   errors?: ItemErrors
+  autoFocus?: boolean
 }
 
-export default function ItemRow({ item, index, canRemove, onChange, onRemove, errors = {} }: Props) {
+export default function ItemRow({ item, index, canRemove, onChange, onRemove, errors = {}, autoFocus }: Props) {
   const set = (patch: Partial<OrderItem>) => onChange(item.id, patch)
   const subActive = item.subOffered === 'yes'
+  const oosSkuRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (autoFocus) oosSkuRef.current?.focus()
+  }, [autoFocus])
 
   const uO = item.unitsOrdered !== '' ? parseFloat(item.unitsOrdered) : null
   const uU = item.unitsUnavailable !== '' ? parseFloat(item.unitsUnavailable) : null
@@ -56,6 +62,7 @@ export default function ItemRow({ item, index, canRemove, onChange, onRemove, er
         <div className={styles.field}>
           <label>OOS SKU</label>
           <input
+            ref={oosSkuRef}
             value={item.oosSku}
             onChange={e => set({ oosSku: e.target.value })}
             placeholder="SKU name"

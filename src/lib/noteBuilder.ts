@@ -29,7 +29,7 @@ export function buildItemNote(item: OrderItem): string {
   let line1 = ''
   if (uO !== null && uU !== null) {
     if (uO === uU) {
-      line1 = `No available item: 0/${uO} ${oosSku}${atThc}`
+      line1 = `Unavailable Item: 0/${uO} ${oosSku}${atThc}`
     } else if (uO > uU) {
       const available = uO - uU
       line1 = `Less available item: ${available}/${uO} ${oosSku}${atThc} - Added last ${available} units`

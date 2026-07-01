@@ -6,10 +6,10 @@ import { CLIENTS } from '@/lib/config'
 import styles from './page.module.css'
 
 export default function Home() {
-  const [selectedClient, setSelectedClient] = useState<string | null>(null)
+  const [selectedClient, setSelectedClient] = useState<string | null>('ascend')
   const [pendingClient, setPendingClient] = useState<string | null>(null)
 
-  const client = CLIENTS.find(c => c.id === selectedClient) ?? null
+  const VISIBLE_CLIENTS = CLIENTS.filter(c => !c.hidden)
   const pending = CLIENTS.find(c => c.id === pendingClient) ?? null
   const current = CLIENTS.find(c => c.id === selectedClient) ?? null
 
@@ -52,7 +52,7 @@ export default function Home() {
       <header className={styles.header}>
         <h1 className={styles.title}>OOS Tracker</h1>
         <div className={styles.clientButtons}>
-          {CLIENTS.map(c => (
+          {VISIBLE_CLIENTS.map(c => (
             <button
               key={c.id}
               className={`${styles.clientBtn} ${selectedClient === c.id ? styles.clientBtnActive : ''}`}
@@ -64,10 +64,6 @@ export default function Home() {
           ))}
         </div>
       </header>
-
-      {!client && (
-        <p className={styles.hint}>Select a client above to get started.</p>
-      )}
 
       {CLIENTS.map(c => (
         <div key={c.id} style={{ display: selectedClient === c.id ? 'block' : 'none' }}>

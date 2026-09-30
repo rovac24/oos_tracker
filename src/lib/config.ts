@@ -3,7 +3,7 @@ export const CLIENTS = [
     id: 'ascend',
     name: 'Ascend',
     icon: '/ascend-icon.png',
-    scriptUrl: 'https://script.google.com/macros/s/AKfycby6KmrefYyt_5qJb9BzKYMkpb56yKtLgCdl2VUVwmdR8OdP9rdCj_pR_DOQLje5Kqgs/exec',
+    scriptUrl: 'https://script.google.com/macros/s/AKfycbwHWR4bKuiN4HFp1ew2xXxirLJlndwxy9cOmvq6ylmPv2msWcDY3bHD5RfW3s5-myyD/exec',
     pacificStone: false,
     hidden: false,
   },
